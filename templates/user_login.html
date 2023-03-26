@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #F0F0F0;
+  }
+  form {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    margin-top: 50px;
+  }
+  input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #CCCCCC;
+    box-sizing: border-box;
+  }
+  button {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+  }
+  button:hover {
+    background-color: #3e8e41;
+  }
+  .container {
+    padding: 16px;
+  }
+  span.psw {
+    float: right;
+    padding-top: 16px;
+  }
+  @media screen and (max-width: 600px) {
+    form {
+      max-width: 300px;
+    }
+  }
+</style>
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <h2>Login</h2>
+        <div class="container">
+            <label for="username"><b>Usuário</b>
+                <input type="text" placeholder="Digite seu usuário" name="username" required>
+            </label>
+
+            <br>
+
+            <label for="password"><b>Senha</b>
+                <input type="password" placeholder="Digite sua senha" name="password" required>
+            </label>
+
+            <br>
+            <br>
+
+            <button type="submit">Entrar</button>
+        </div>
+
+        <br>
+        <br>
+        <a href="{% url 'create_user' %}">Criar usuário</a>
+      </form>
+{% endblock %}
