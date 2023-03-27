@@ -123,3 +123,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL = {
+    'HOST': 'smtp.gmail.com',
+    'USE_TLS': True,
+    'PORT': '587',
+    'USER': 'microxdd@gmail.com',
+    'PASSWORD': 'DesafioAlphaParaDesenvolvedorPython'
+}
+
+FROM_EMAIL = 'dasafio@inoa.alpha'
+
+API_KEY = 'XS4QEQI1TM92J92F'
+API_ALPHA_URL = f'https://www.alphavantage.co/query?apikey={API_KEY}'
+UPDATE_ALPHA = f'{API_ALPHA_URL}&function=GLOBAL_QUOTE&symbol='
+SEARCH_ALPHA = f'{API_ALPHA_URL}&function=SYMBOL_SEARCH&keywords='
