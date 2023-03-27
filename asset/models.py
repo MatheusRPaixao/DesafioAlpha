@@ -1,11 +1,12 @@
-import math
-
+import logging
+import requests
 import schedule
+
 from django.db import models
 from django.contrib.auth.models import User
 
 from DesafioAlpha.controllers import send_email_tunnel_breach
-from controllers import update_asset
+from DesafioAlpha import settings
 
 
 class Asset(models.Model):
@@ -37,7 +38,7 @@ class Asset(models.Model):
 
         if not self.schedule_running:
             # Create schedule for new asset
-            schedule.every().minutes(self.update_period).do(update_asset, self.id).tag(self.id)
+            schedule.every().minutes(self.update_period).do(self.update_asset, self).tag(self.id)
             self.schedule_running = True
 
         # Logic to send e-mails
@@ -64,3 +65,17 @@ class Asset(models.Model):
         schedule.clear(self.id)
 
         return super().delete(self, **kwargs)
+
+    def update_asset(self):
+        """
+        Update an asset with external information
+        """
+
+        url = f'{settings.UPDATE_ALPHA}{self.name}'
+        data = requests.get(url).json()
+
+        self.highest_price = data.get('high', self.highest_price)
+        self.lowest_price = data.get('low', self.lowest_price)
+        self.current_price = data.get('price', self.current_price)
+        self.save()
+

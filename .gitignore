@@ -4,3 +4,7 @@ base/__pycache__/
 DesafioAlpha/__pycache__/
 
 user/__pycache__/
+
+asset/__pycache__/
+
+*.pyc
