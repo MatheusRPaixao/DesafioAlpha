@@ -13,9 +13,9 @@ def login_view(request):
             login(request, user)
             return redirect('home')
         else:
-            return render(request, 'user_login.html', {'error_message': 'Usuário ou senha incorretos.'})
+            return render(request, 'registration/login.html', {'error_message': 'Usuário ou senha incorretos.'})
     else:
-        return render(request, 'user_login.html')
+        return render(request, 'registration/login.html')
 
 
 def logout_view(request):

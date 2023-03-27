@@ -4,7 +4,8 @@ import schedule
 from django.db import models
 from django.contrib.auth.models import User
 
-from DesafioAlpha.controllers import update_asset, send_email_tunnel_breach
+from DesafioAlpha.controllers import send_email_tunnel_breach
+from controllers import update_asset
 
 
 class Asset(models.Model):

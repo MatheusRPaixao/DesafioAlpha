@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-      <a href="{% url 'logout' %}">Sair</a>
-    {% else %}
-      <a href="{% url 'login' %}">Login</a>
-    {% endif %}
+  <form method="get">
+      <label>
+          <input type="text" name="search" placeholder="Buscar por nome..." value="{{ search }}">
+      </label>
+      <button type="submit">Buscar</button>
+  </form>
+
+  <ul>
+    {% for stock in stocks %}
+      <li>{{ item.symbol }} - R$ {{ item.name }}</li>
+    {% empty %}
+      <li>Nenhum item encontrado.</li>
+    {% endfor %}
+  </ul>
 {% endblock %}

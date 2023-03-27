@@ -1,15 +1,12 @@
-import logging
 import threading
 import time
-import requests
 import schedule
 
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 
-from asset import models as asset_models
-import settings
+from DesafioAlpha import settings
 
 
 def run_continuously(interval=500):
@@ -29,31 +26,6 @@ def run_continuously(interval=500):
 
     continuous_thread = ScheduleThread()
     continuous_thread.start()
-
-
-def update_asset(asset_id):
-    """
-    Update an asset with external information
-
-    :param asset_id: ID for the asset to be updated
-    """
-
-    try:
-        asset = asset_models.Asset.objects.get(id=asset_id)
-    except asset_models.Asset.DoesNotExist:
-        logging.error('Asset #{} does not exists.')
-        return
-
-    url = f'{settings.UPDATE_ALPHA}{asset.name}'
-    data = requests.get(url).json()
-
-    asset.highest_price = data.get('high', asset.highest_price)
-    asset.lowest_price = data.get('low', asset.lowest_price)
-    asset.current_price = data.get('price', asset.current_price)
-    asset.save()
-
-
-
 
 
 def send_email_tunnel_breach(user: User, stock_name, sell_stock):

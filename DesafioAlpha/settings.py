@@ -138,3 +138,5 @@ API_KEY = 'XS4QEQI1TM92J92F'
 API_ALPHA_URL = f'https://www.alphavantage.co/query?apikey={API_KEY}'
 UPDATE_ALPHA = f'{API_ALPHA_URL}&function=GLOBAL_QUOTE&symbol='
 SEARCH_ALPHA = f'{API_ALPHA_URL}&function=SYMBOL_SEARCH&keywords='
+
+IS_RUNNING = False
