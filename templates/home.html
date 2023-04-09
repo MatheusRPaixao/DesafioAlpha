@@ -1,29 +1,87 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <form method="get">
-      <label>
-          <input type="text" name="search" placeholder="Buscar por nome..." value="{{ search }}">
-      </label>
-      <button type="submit">Buscar</button>
-  </form>
+    <form class="form-inline my-2 my-lg-0" action="/search-stock" method="get">
+        <input class="form-control mr-sm-2" name="search"
+               type="search" placeholder="Buscar cotação por nome..." value="{{ search }}" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
+    </form>
 
-  <form method="post">
-    {% csrf_token %}
-    <ul>
+    <div class="list-group">
       {% for stock in stocks %}
-        <li>
-          <input type="checkbox" name="selection" value="{{ stock.symbol }}">
+        <a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#modal-{{ stock.id }}">
           {{ stock.name }}
-            <input type="number" name="period" placeholder="Periodo para atualizar (minutos)">
-            <input type="number" name="bottom_tunnel" placeholder="Valor para compra">
-            <input type="number" name="top_tunnel" placeholder="Valor para venda">
-        </li>
-      {% empty %}
-        <li>Nenhum item encontrado.</li>
-      {% endfor %}
-    </ul>
-    <button type="submit">Monitorar</button>
-  </form>
+        </a>
+        <div class="modal fade" id="modal-{{ stock.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ stock.id }}Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <form action="/update-stock-observer" method="post">
+                {% csrf_token %}
+                <input type="text" name="symbol" hidden value="{{ stock.symbol }}">
+                <input type="text" name="name" hidden value="{{ stock.name }}">
+
+                <div class="modal-header">
+                  <h5 class="modal-title" id="monitor-modal-label">{{ stock.name }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="period">Período para atualização (em minutos)</label>
+                    <input type="number" class="form-control" id="period" name="period" placeholder="Período para atualização (em minutos)">
+                  </div>
+                  <div class="form-group">
+                    <label for="bottom_tunnel">Valor para compra</label>
+                    <input type="number" class="form-control" id="bottom_tunnel" name="bottom_tunnel" placeholder="Valor para compra">
+                  </div>
+                  <div class="form-group">
+                    <label for="top_tunnel">Valor para venda</label>
+                    <input type="number" class="form-control" id="top_tunnel" name="top_tunnel" placeholder="Valor para venda">
+                  </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary">Monitorar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <li>Nenhum item encontrado.</li>
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+
+
+
+   {% comment %} <div class="container-fluid">
+
+        <form method="post">
+            {% csrf_token %}
+            <ul>
+                {% for stock in stocks %}
+                    <li>
+                        <input type="checkbox" name="selection" value="{{ stock.symbol }}">
+                        {{ stock.name }}
+                        <input type="number" name="period" placeholder="Periodo para atualizar (minutos)">
+                        <input type="number" name="bottom_tunnel" placeholder="Valor para compra">
+                        <input type="number" name="top_tunnel" placeholder="Valor para venda">
+                    </li>
+                {% empty %}
+                    <li>Nenhum item encontrado.</li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Monitorar</button>
+        </form>
+    </div>{% endcomment %}
+
 
 {% endblock %}
+

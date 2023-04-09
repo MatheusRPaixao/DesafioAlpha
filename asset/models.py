@@ -1,4 +1,7 @@
 import logging
+import math
+from datetime import timedelta
+
 import requests
 import schedule
 
@@ -12,8 +15,9 @@ from DesafioAlpha import settings
 class Asset(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assets')
 
-    # Name of the asset, every asset must be one unique name
-    name = models.CharField(max_length=40, unique=True)
+    # Name of the asset
+    symbol = models.CharField(max_length=40)
+    name = models.CharField(max_length=256)
 
     # Price
     current_price = models.FloatField(default=0)
@@ -38,7 +42,8 @@ class Asset(models.Model):
 
         if not self.schedule_running:
             # Create schedule for new asset
-            schedule.every().minutes(self.update_period).do(self.update_asset, self).tag(self.id)
+            minutes = math.floor(timedelta(minutes=int(self.update_period)).total_seconds() / 60)
+            schedule.every(minutes).minutes.do(self.update_asset, self).tag(f'{self.user_id}{self.symbol}')
             self.schedule_running = True
 
         # Logic to send e-mails
