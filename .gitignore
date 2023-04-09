@@ -8,3 +8,5 @@ user/__pycache__/
 asset/__pycache__/
 
 *.pyc
+
+*.sqlite3
