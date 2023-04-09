@@ -43,7 +43,7 @@ class Asset(models.Model):
         if not self.schedule_running:
             # Create schedule for new asset
             minutes = math.floor(timedelta(minutes=int(self.update_period)).total_seconds() / 60)
-            schedule.every(minutes).minutes.do(self.update_asset, self).tag(f'{self.user_id}{self.symbol}')
+            schedule.every(minutes).minutes.do(self.update_asset, self).tag(self.get_schedule_token())
             self.schedule_running = True
 
         # Logic to send e-mails
@@ -67,7 +67,7 @@ class Asset(models.Model):
 
     def delete(self, **kwargs):
         # Remove schedule for the deleted asset
-        schedule.clear(self.id)
+        schedule.clear(self.get_schedule_token())
 
         return super().delete(self, **kwargs)
 
@@ -83,4 +83,7 @@ class Asset(models.Model):
         self.lowest_price = data.get('low', self.lowest_price)
         self.current_price = data.get('price', self.current_price)
         self.save()
+
+    def get_schedule_token(self):
+        return f'{self.user_id}-{self.symbol}'
 
