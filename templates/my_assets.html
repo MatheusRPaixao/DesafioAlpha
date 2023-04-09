@@ -1,24 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form class="form-inline my-2 my-lg-0 justify-content-center" action="/search-stock" method="get">
-        <input class="form-control mr-sm-2 w-25" name="search"
-               type="search" placeholder="Buscar cotação por nome..." value="{{ search }}" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-    </form>
-
     <div class="list-group mt-3">
-      {% for stock in stocks %}
-        <a href="#" class="list-group-item list-group-item-action mt-2" data-toggle="modal" data-target="#modal-{{ stock.id }}">
+      {% for asset in assets %}
+          <div class="card bg-dark text-white">
+              <div class="card-header">
+                  {{ asset.symbol }}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Preço atual: {{ asset.current_price }}</h5>
+                  <br>
+
+                <p class="card-text">Nome: {{ asset.name }}</p>
+                <p class="card-text">Período para atualização: {{ asset.period }}</p>
+                <p class="card-text">Valor de venda: {{ asset.tunnel_top }}</p>
+                <p class="card-text">Valor de compra: {{ asset.tunnel_bottom }}</p>
+              </div>
+            </div>
+        <a href="#" class="list-group-item list-group-item-action mt-2" data-toggle="modal" data-target="#modal-{{ asset.id }}">
           {{ stock.name }}
         </a>
-        <div class="modal fade" id="modal-{{ stock.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ stock.id }}Label" aria-hidden="true">
+        <div class="modal fade" id="modal-{{ asset.id }}" tabindex="-1" role="dialog" aria-labelledby="{{ asset.id }}Label" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <form action="/update-stock-observer" method="post">
                 {% csrf_token %}
-                <input type="text" name="symbol" hidden value="{{ stock.symbol }}">
-                <input type="text" name="name" hidden value="{{ stock.name }}">
+                <input type="text" name="symbol" hidden value="{{ asset.symbol }}">
+                <input type="text" name="name" hidden value="{{ asset.name }}">
 
                 <div class="modal-header">
                   <h5 class="modal-title" id="monitor-modal-label">{{ stock.name }}</h5>
@@ -29,15 +37,18 @@
                 <div class="modal-body">
                   <div class="form-group">
                     <label for="period">Período para atualização (em minutos)</label>
-                    <input type="number" class="form-control" id="period" name="period" placeholder="Período para atualização (em minutos)">
+                    <input type="number" class="form-control" id="period"
+                           value="{{ asset.period }}" name="period" placeholder="Período para atualização (em minutos)">
                   </div>
                   <div class="form-group">
                     <label for="bottom_tunnel">Valor para compra</label>
-                    <input type="number" class="form-control" id="bottom_tunnel" name="bottom_tunnel" placeholder="Valor para compra">
+                    <input type="number" class="form-control" id="bottom_tunnel"
+                           value="{{ asset.bottom_tunnel }}" name="bottom_tunnel" placeholder="Valor para compra">
                   </div>
                   <div class="form-group">
                     <label for="top_tunnel">Valor para venda</label>
-                    <input type="number" class="form-control" id="top_tunnel" name="top_tunnel" placeholder="Valor para venda">
+                    <input type="number" class="form-control" id="top_tunnel"
+                           value="{{ asset.top_tunnel }}" name="top_tunnel" placeholder="Valor para venda">
                   </div>
                 </div>
                 <div class="modal-footer justify-content-center">

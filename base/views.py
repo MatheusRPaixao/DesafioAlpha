@@ -45,6 +45,9 @@ def search_stock_view(request):
 
 @login_required
 def update_stock_observer(request):
+    if request.method != 'POST':
+        return render(request, 'home.html', {'status': 'Fail', 'message': 'Endpoint must receive a POST request.'})
+
     user = request.user
     name = request.POST.get('name')
     symbol = request.POST.get('symbol')
@@ -52,14 +55,16 @@ def update_stock_observer(request):
     bottom_tunnel = request.POST.get('bottom_tunnel')
     top_tunnel = request.POST.get('top_tunnel')
 
+    # Get or create for avoid multiple assets for same stock
     asset, is_new_asset = asset_models.Asset.objects.get_or_create(
         user=user,
         name=name,
-        symbol=symbol,
-        update_period=int(period),
-        tunnel_top=float(top_tunnel),
-        tunnel_bottom=float(bottom_tunnel)
+        symbol=symbol
     )
+
+    asset.update_period = int(period) if period is not None else asset.period
+    asset.tunnel_top = float(top_tunnel) if top_tunnel is not None else asset.top_tunnel
+    asset.tunnel_bottom = float(bottom_tunnel) if bottom_tunnel is not None else asset.bottom_tunnel
     asset.update_asset()
 
     if is_new_asset:
@@ -67,4 +72,16 @@ def update_stock_observer(request):
     else:
         logging.info('Stock #{} observer update with new inputs'.format(asset.id))
 
-    return render(request, 'home.html', {'status': 'Stock updated.'})
+    return render(request, 'home.html', {'status': 'Ok', 'message': 'Stock updated'})
+
+
+@login_required()
+def get_user_assets(request):
+    if request.method != 'GET':
+        return render(request, 'my_assets.html', {'status': 'Fail', 'message': 'Endpoint must receive a GET request.'})
+
+    assets = asset_models.Asset.objects.filter(user=request.user).order_by('name')
+
+    return render(request, 'my_assets.html', {'assets': assets})
+
+

@@ -46,24 +46,25 @@ class Asset(models.Model):
             schedule.every(minutes).minutes.do(self.update_asset, self).tag(self.get_schedule_token())
             self.schedule_running = True
 
-        # Logic to send e-mails
-        if self.current_price >= self.tunnel_top:
-            # Check if top value has already been reached before, if not, send the e-mail.
-            # Avoiding multiple e-mails for the current breach
-            if not self.top_breach:
-                send_email_tunnel_breach(self.user, True)
-                self.top_breach = True
-        else:
-            self.top_breach = False
+        if self.id:
+            # Logic to send e-mails
+            if self.current_price >= self.tunnel_top:
+                # Check if top value has already been reached before, if not, send the e-mail.
+                # Avoiding multiple e-mails for the current breach
+                if not self.top_breach:
+                    send_email_tunnel_breach(self.user, self.name, True)
+                    self.top_breach = True
+            else:
+                self.top_breach = False
 
-        if self.current_price <= self.tunnel_bottom:
-            if not self.bottom_breach:
-                send_email_tunnel_breach(self.user, False)
-                self.tunnel_bottom = True
-        else:
-            self.bottom_breach = False
+            if self.current_price <= self.tunnel_bottom:
+                if not self.bottom_breach:
+                    send_email_tunnel_breach(self.user, self.name, False)
+                    self.tunnel_bottom = True
+            else:
+                self.bottom_breach = False
 
-        return super().save(self, **kwargs)
+        return super().save(**kwargs)
 
     def delete(self, **kwargs):
         # Remove schedule for the deleted asset
