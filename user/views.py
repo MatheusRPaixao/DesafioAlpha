@@ -20,7 +20,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('home')
+    return redirect('user_login')
 
 
 def create_user_view(request):

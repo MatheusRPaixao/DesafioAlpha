@@ -52,36 +52,4 @@
             <li>Nenhum item encontrado.</li>
         {% endfor %}
     </div>
-
-
-
-
-
-
-
-
-
-   {% comment %} <div class="container-fluid">
-
-        <form method="post">
-            {% csrf_token %}
-            <ul>
-                {% for stock in stocks %}
-                    <li>
-                        <input type="checkbox" name="selection" value="{{ stock.symbol }}">
-                        {{ stock.name }}
-                        <input type="number" name="period" placeholder="Periodo para atualizar (minutos)">
-                        <input type="number" name="bottom_tunnel" placeholder="Valor para compra">
-                        <input type="number" name="top_tunnel" placeholder="Valor para venda">
-                    </li>
-                {% empty %}
-                    <li>Nenhum item encontrado.</li>
-                {% endfor %}
-            </ul>
-            <button type="submit">Monitorar</button>
-        </form>
-    </div>{% endcomment %}
-
-
 {% endblock %}
-

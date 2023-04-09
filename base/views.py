@@ -81,7 +81,4 @@ def get_user_assets(request):
         return render(request, 'my_assets.html', {'status': 'Fail', 'message': 'Endpoint must receive a GET request.'})
 
     assets = asset_models.Asset.objects.filter(user=request.user).order_by('name')
-
     return render(request, 'my_assets.html', {'assets': assets})
-
-

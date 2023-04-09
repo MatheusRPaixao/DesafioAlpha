@@ -1,33 +1,44 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Desafio Alpha</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+    <body>
+      <form method="post">
+        {% csrf_token %}
+        <h2>Criar usuário</h2>
+        {% if error_message %}
+          <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+        <div class="form-group">
+          <label for="username">Usuário:
+            <input type="text" name="username" class="form-control" required>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:
+            <input type="email" name="email" class="form-control" required>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="password1">Senha:
+            <input type="password" name="password1" class="form-control" required>
+          </label>
+        </div>
 
-{% block content %}
-  <form method="post">
-    {% csrf_token %}
-    <h2>Criar usuário</h2>
-    {% if error_message %}
-      <div class="alert alert-danger">{{ error_message }}</div>
-    {% endif %}
-    <div class="form-group">
-      <label for="username">Usuário:
-        <input type="text" name="username" class="form-control" required>
-      </label>
-    </div>
-    <div class="form-group">
-      <label for="email">Email:
-        <input type="email" name="email" class="form-control" required>
-      </label>
-    </div>
-    <div class="form-group">
-      <label for="password1">Senha:
-        <input type="password" name="password1" class="form-control" required>
-      </label>
-    </div>
+        <div class="form-group">
+          <label for="password2">Confirme a senha:
+            <input type="password" name="password2" class="form-control" required>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Criar usuário</button>
+      </form>
 
-    <div class="form-group">
-      <label for="password2">Confirme a senha:
-        <input type="password" name="password2" class="form-control" required>
-      </label>
-    </div>
-    <button type="submit" class="btn btn-primary">Criar usuário</button>
-  </form>
-{% endblock %}
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+   </body>
+</html>
