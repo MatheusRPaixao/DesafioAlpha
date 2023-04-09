@@ -50,7 +50,7 @@ def send_email_tunnel_breach(user: User, stock_name, sell_stock):
     message = EmailMultiAlternatives(
         subject=f'Temos uma atualização sobre a cotação \"{stock_name}\".',
         from_email=settings.FROM_EMAIL,
-        to=user.email,
+        to=(user.email,),
         connection=connection
     )
 

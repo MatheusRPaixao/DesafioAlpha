@@ -37,16 +37,13 @@ class Asset(models.Model):
     bottom_breach = models.BooleanField(default=False)
 
     def save(self, **kwargs):
-        if not self.update_period:
-            raise Exception('Period for the asset update must be valid.')
+        if self.id and self.current_price:
+            if not self.schedule_running:
+                # Create schedule for new asset
+                minutes = math.floor(timedelta(minutes=int(self.update_period)).total_seconds() / 60)
+                schedule.every(minutes).minutes.do(self.update_asset, self).tag(self.get_schedule_token())
+                self.schedule_running = True
 
-        if not self.schedule_running:
-            # Create schedule for new asset
-            minutes = math.floor(timedelta(minutes=int(self.update_period)).total_seconds() / 60)
-            schedule.every(minutes).minutes.do(self.update_asset, self).tag(self.get_schedule_token())
-            self.schedule_running = True
-
-        if self.id:
             # Logic to send e-mails
             if self.current_price >= self.tunnel_top:
                 # Check if top value has already been reached before, if not, send the e-mail.
@@ -77,12 +74,12 @@ class Asset(models.Model):
         Update an asset with external information
         """
 
-        url = f'{settings.UPDATE_ALPHA}{self.name}'
-        data = requests.get(url).json()
+        url = f'{settings.UPDATE_ALPHA}{self.symbol}'
+        data = requests.get(url).json().get('Global Quote', {})
 
-        self.highest_price = data.get('high', self.highest_price)
-        self.lowest_price = data.get('low', self.lowest_price)
-        self.current_price = data.get('price', self.current_price)
+        self.highest_price = float(data.get('03. high', self.highest_price))
+        self.lowest_price = float(data.get('04. low', self.lowest_price))
+        self.current_price = float(data.get('05. price', self.current_price))
         self.save()
 
     def get_schedule_token(self):
